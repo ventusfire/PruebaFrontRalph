@@ -42,7 +42,10 @@ export class HomeComponent implements OnInit {
   search(enter: any): void {
     const searching: string = enter.target.value;
     this.users = this.userCopy.filter((res: IUser) => {
-      return res.name.toLowerCase().includes(searching.toLowerCase());
+      const allvalues = [ res.name, res.username, res.phone, res.email]
+        .map((resMap) => resMap.toLowerCase()).filter((val) =>
+      val !== undefined)
+      return allvalues.some((value) =>value.includes(searching))
     });
   }
 

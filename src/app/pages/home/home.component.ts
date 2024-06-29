@@ -41,8 +41,8 @@ export class HomeComponent implements OnInit {
 
   search(enter: any): void {
     const searching: string = enter.target.value;
-    this.users = this.userCopy.filter((res: IUser) => {
-      const allvalues = [ res.name, res.username, res.phone, res.email]
+    this.users = this.userCopy.filter(({ name, username, phone, email }) => {
+      const allvalues = [ name, username, phone, email]
         .map((resMap) => resMap.toLowerCase()).filter((val) =>
       val !== undefined)
       return allvalues.some((value) =>value.includes(searching))

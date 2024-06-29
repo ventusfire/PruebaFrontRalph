@@ -1,0 +1,13 @@
+<div class="main">
+  <header class="header">Contacts</header>
+  <aside class="search">
+    <div class="input">
+      <input type="text" placeholder="Search..." (input)="search($event)">
+    </div>
+  </aside>
+  <section class="users">
+    @for (user of users; track $index) {
+      <app-card-user [user]="user"></app-card-user>
+    }
+  </section>
+</div>

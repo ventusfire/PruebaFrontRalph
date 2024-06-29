@@ -1,49 +1,40 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, effect, signal, computed } from '@angular/core';
 import { CardUserComponent } from '../../components/card-user/card-user.component';
 import { IUser } from '../../interfaces/IUser.interface';
 import { UsersService } from '../../services/users.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
-    CardUserComponent
+    CardUserComponent,
+    FormsModule
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
 
   usersService = inject(UsersService)
 
-  users:IUser[] = [];
-  userCopy:IUser[] = [];
+  users = signal<IUser[]>([])
+  searchInput = signal<string>('');
 
-  ngOnInit(): void {
-    this.getUser()
+  constructor(){
+    effect(() => {
+      this.usersService.getUsers().subscribe(
+        (res) =>  {
+          this.users.set(res)
+        }
+      )
+    })
   }
 
-  getUser(){
-    this.usersService.getUsers().subscribe(
-      (res) => {
-        this.users = res.map(({ name, username, email, phone }) => {
-          return {
-            name: name,
-            username: username,
-            email: email,
-            phone: phone
-          }
-        });
-        this.userCopy = this.users;
-      }
+  filteredUsers = computed(() => {
+    const search = (this.searchInput().valueOf() || '').toString();
+    return this.users().filter((user) => user.name.toLocaleLowerCase().includes(search)
     )
-  }
-
-  search(enter: any): void {
-    const searching: string = enter.target.value;
-    this.users = this.userCopy.filter((res: IUser) => {
-      return res.name.toLowerCase().includes(searching.toLowerCase());
-    });
-  }
+  })
 
 }

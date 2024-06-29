@@ -2,11 +2,11 @@
   <header class="header">Contacts</header>
   <aside class="search">
     <div class="input">
-      <input type="text" placeholder="Search..." (input)="search($event)">
+      <input type="text" placeholder="Search..." [(ngModel)]="searchInput">
     </div>
   </aside>
   <section class="users">
-    @for (user of users; track $index) {
+    @for (user of filteredUsers(); track $index) {
       <app-card-user [user]="user"></app-card-user>
     }
   </section>

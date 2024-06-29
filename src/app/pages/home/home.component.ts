@@ -31,10 +31,20 @@ export class HomeComponent {
     })
   }
 
+  combinedSearch = computed(() => {
+    const searchTerm = this.searchInput().valueOf() || '';
+    return searchTerm.toLowerCase();
+  });
+
   filteredUsers = computed(() => {
-    const search = (this.searchInput().valueOf() || '').toString();
-    return this.users().filter((user) => user.name.toLocaleLowerCase().includes(search)
-    )
+    const search = this.combinedSearch();
+    return this.users().filter(({ name, username, phone, email }) => {
+      const allValues = [name, username, phone, email]
+        .map((val) => val.toLowerCase() )
+        .filter((values) => values !== undefined)
+
+      return allValues.some((values) => values.includes(search))
+    })
   })
 
 }
